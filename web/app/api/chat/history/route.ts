@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 const serverBase = process.env.PY_SERVER_URL || 'https://openpoke-backend-l9ul.onrender.com';
 const historyPath = `${serverBase.replace(/\/$/, '')}/api/v1/chat/history`;
 
