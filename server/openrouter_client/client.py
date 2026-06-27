@@ -7,7 +7,7 @@ import httpx
 
 from ..config import get_settings
 
-OpenRouterBaseURL = "https://generativelanguage.googleapis.com/v1beta/openai"
+OpenRouterBaseURL = "https://openrouter.ai/api/v1"
 
 
 class OpenRouterError(RuntimeError):
