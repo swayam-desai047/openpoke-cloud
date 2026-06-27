@@ -11,6 +11,15 @@ const { loadEnvConfig } = envPackage;
 loadEnvConfig?.(repoRoot, isDevelopment);
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://openpoke-backend-l9ul.onrender.com/api/:path*',
+      },
+    ];
+  },
+};
 
 export default nextConfig;
