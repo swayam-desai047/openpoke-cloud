@@ -51,11 +51,11 @@ class Settings(BaseModel):
     server_port: int = Field(default=_env_int("OPENPOKE_PORT", 8001))
 
     # LLM model selection
-    interaction_agent_model: str = Field(default="google/gemini-2.5-flash")
-    execution_agent_model: str = Field(default="google/gemini-2.5-flash")
-    execution_agent_search_model: str = Field(default="google/gemini-2.5-flash")
-    summarizer_model: str = Field(default="google/gemini-2.5-flash")
-    email_classifier_model: str = Field(default="google/gemini-2.5-flash")
+    interaction_agent_model: str = Field(default="gemini-2.5-flash")
+    execution_agent_model: str = Field(default="gemini-2.5-flash")
+    execution_agent_search_model: str = Field(default="gemini-2.5-flash")
+    summarizer_model: str = Field(default="gemini-2.5-flash")
+    email_classifier_model: str = Field(default="gemini-2.5-flash")
 
     # Credentials / integrations
     openrouter_api_key: Optional[str] = Field(default=os.getenv("OPENROUTER_API_KEY"))

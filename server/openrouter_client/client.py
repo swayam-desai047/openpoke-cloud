@@ -7,7 +7,7 @@ import httpx
 
 from ..config import get_settings
 
-OpenRouterBaseURL = "https://openrouter.ai/api/v1"
+OpenRouterBaseURL = "https://generativelanguage.googleapis.com/v1beta/openai"
 
 
 class OpenRouterError(RuntimeError):
@@ -54,6 +54,7 @@ async def request_chat_completion(
     api_key: Optional[str] = None,
     tools: Optional[List[Dict[str, Any]]] = None,
     base_url: str = OpenRouterBaseURL,
+    max_tokens: Optional[int] = None,
 ) -> Dict[str, Any]:
     """Request a chat completion and return the raw JSON payload."""
 
@@ -64,6 +65,8 @@ async def request_chat_completion(
     }
     if tools:
         payload["tools"] = tools
+    if max_tokens is not None:
+        payload["max_tokens"] = max_tokens
 
     url = f"{base_url.rstrip('/')}/chat/completions"
 

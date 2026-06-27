@@ -216,6 +216,7 @@ class InteractionAgentRuntime:
             system=system_prompt,
             api_key=self.api_key,
             tools=self.tool_schemas,
+            max_tokens=4000,
         )
 
     # Extract the assistant's message from the OpenRouter API response structure
