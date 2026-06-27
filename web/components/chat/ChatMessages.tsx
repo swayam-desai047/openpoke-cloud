@@ -21,6 +21,32 @@ export function ChatMessages({ messages, isWaitingForResponse, scrollContainerRe
         const next = messages[index + 1];
         const tail = !next || next.role !== message.role;
 
+        let displayText = message.text;
+        if (!displayText && message.tool_calls && message.tool_calls.length > 0) {
+          try {
+            const userMessageCall = message.tool_calls.find(
+              (tc: any) => (tc?.name === 'send_message_to_user' || tc?.function?.name === 'send_message_to_user')
+            );
+            if (userMessageCall) {
+              const args = userMessageCall.arguments || userMessageCall.function?.arguments;
+              const parsedArgs = typeof args === 'string' ? JSON.parse(args) : args;
+              if (parsedArgs?.message) {
+                displayText = parsedArgs.message;
+              }
+            } else {
+              const firstCall = message.tool_calls[0];
+              const name = firstCall?.name || firstCall?.function?.name || 'unknown_tool';
+              const args = firstCall?.arguments || firstCall?.function?.arguments;
+              const parsedArgs = typeof args === 'string' ? JSON.parse(args) : args;
+              const argsStr = parsedArgs ? Object.entries(parsedArgs).map(([k, v]) => `${k}=${JSON.stringify(v)}`).join(', ') : '';
+              displayText = `[System: Executing ${name}(${argsStr})]`;
+            }
+          } catch (e) {
+            console.error('Error parsing tool calls in ChatMessages:', e);
+            displayText = '[System: Executing tool]';
+          }
+        }
+
         return (
           <div key={message.id} className={clsx('flex', isUser ? 'justify-end' : 'justify-start')}>
             <div
@@ -30,7 +56,7 @@ export function ChatMessages({ messages, isWaitingForResponse, scrollContainerRe
                 isDraft && 'whitespace-pre-wrap',
               )}
             >
-              <span className={isDraft ? 'block whitespace-pre-wrap' : 'whitespace-pre-wrap'}>{message.text}</span>
+              <span className={isDraft ? 'block whitespace-pre-wrap' : 'whitespace-pre-wrap'}>{displayText}</span>
             </div>
           </div>
         );

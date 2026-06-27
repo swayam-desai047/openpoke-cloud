@@ -19,10 +19,13 @@ const formatEscapeCharacters = (text: string): string => {
     .replace(/\\\\/g, '\\');
 };
 
-const isRenderableMessage = (entry: any) =>
-  typeof entry?.role === 'string' &&
-  typeof entry?.content === 'string' &&
-  entry.content.trim().length > 0;
+const isRenderableMessage = (entry: any) => {
+  if (!entry || typeof entry.role !== 'string') return false;
+  if (typeof entry.content === 'string' && entry.content.trim().length > 0) return true;
+  const toolCalls = entry.tool_calls || entry.toolCalls;
+  if (Array.isArray(toolCalls) && toolCalls.length > 0) return true;
+  return false;
+};
 
 const toBubbles = (payload: any): ChatBubble[] => {
   if (!Array.isArray(payload?.messages)) return [];
@@ -32,7 +35,8 @@ const toBubbles = (payload: any): ChatBubble[] => {
     .map((message: any, index: number) => ({
       id: `history-${index}`,
       role: message.role,
-      text: formatEscapeCharacters(message.content),
+      text: typeof message.content === 'string' ? formatEscapeCharacters(message.content) : '',
+      tool_calls: message.tool_calls || message.toolCalls || undefined,
     }));
 };
 
